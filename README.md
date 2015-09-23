@@ -3,6 +3,7 @@ A python library for working with OptionsCity Software's City Trader REST API.
 
 ### The following examples assume you have a City Trader API:
 1) dev username and password
+
 2) dev client_id and client_secret
 
 ### Initialize client and retrieve new token
