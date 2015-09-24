@@ -12,7 +12,8 @@ A python library for working with OptionsCity Software's City Trader REST API.
 2. Unzip the archive
 3. Run: ```python setup.py install```
 
-### Examples
+---
+# Examples
 ##### Initialize client and retrieve new token
 ```python
 from citytrader.request_client import RequestClient
