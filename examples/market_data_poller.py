@@ -4,6 +4,7 @@ Poll for market data every 1 second and print bid/ask in blue/red
 
 import threading
 from citytrader.request_client import RequestClient
+from citytrader.helpers import price_to_decimal
 
 #   gather user auth input and init RequestClient()
 def main():
@@ -14,14 +15,19 @@ def main():
     rc = RequestClient(server="https://devservices.optionshop.com", client_id=client_id, client_secret=client_secret, username=username, password=password)
     instrument_id = raw_input('Enter instrument_id: ')
 
+    instrument = rc.request(request_type="GET", url="instruments/%s" % instrument_id)
+    product = rc.request(request_type="GET", url="products/%s" % instrument["data"]["product_id"])
+    display_factor = product["data"]["display_factor"]
+    base_factor = product["data"]["base_factor"]
+
     print '\033[1;34m' + '%8s' % 'Bid' + '\033[1;m', '\033[1;31m' + '%20s' % 'Ask' + '\033[1;m', '\033[0m'
 
-    poll_md(rc, instrument_id)
+    poll_md(rc, instrument_id, display_factor, base_factor)
 
 
 #   print md
-def poll_md(rc, instrument_id):
-    threading.Timer(1.0, poll_md, [rc, instrument_id]).start()
+def poll_md(rc, instrument_id, display_factor, base_factor):
+    threading.Timer(1.0, poll_md, [rc, instrument_id, display_factor, base_factor]).start()
     md_message = rc.request(request_type="GET", url="marketdata?instrument_ids=%s" % instrument_id)
 
     buy_price = None
@@ -30,10 +36,10 @@ def poll_md(rc, instrument_id):
     sell_quantity = None
     for i in md_message["data"]:
         if i['side'] == "Buy":
-            buy_price = i['price']
+            buy_price = price_to_decimal(i['price'], display_factor, base_factor)
             buy_quantity = i['quantity']
         elif i['side'] == "Sell":
-            sell_price = i['price']
+            sell_price = price_to_decimal(i['price'], display_factor, base_factor)
             sell_quantity = i['quantity']
 
     if buy_price and sell_price:
