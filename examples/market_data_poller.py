@@ -2,6 +2,7 @@
 Poll for market data every 1 second and print bid/ask in blue/red
 """
 
+import sys
 import threading
 from citytrader.request_client import RequestClient
 from citytrader.helpers import price_to_decimal
@@ -20,6 +21,7 @@ def main():
     display_factor = product["data"]["display_factor"]
     base_factor = product["data"]["base_factor"]
 
+    sys.stdout.write("\x1b]2;" + instrument["data"]["name"] + " market data poller" + "\x07")
     print '\033[1;34m' + '%8s' % 'Bid' + '\033[1;m', '\033[1;31m' + '%20s' % 'Ask' + '\033[1;m', '\033[0m'
 
     poll_md(rc, instrument_id, display_factor, base_factor)
