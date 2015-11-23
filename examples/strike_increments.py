@@ -2,7 +2,6 @@
 select out products of type "Option" and figure out strike increments
 """
 
-import sys
 from decimal import Decimal
 from citytrader.request_client import RequestClient
 
