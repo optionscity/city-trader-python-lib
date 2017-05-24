@@ -88,7 +88,7 @@ class RequestClient():
     #   Resource requests
     #   Fore more details visit:  https://devservices.optionshop.com/docs/overview
     #
-    def request(self, request_type, url="events", data=None):
+    def request(self, request_type, url="events", data=None, params={}):
 
         #   refresh token if necessary
         if datetime.utcnow() >= self.expires_at:
@@ -119,7 +119,8 @@ class RequestClient():
                     "status_code": 500,
                     "reason": "'data' parameter must be of type dict."
                 }
-
+        elif params:
+            resp = request_function(request_url, headers=header, params=params)
         else:
             resp = request_function(request_url, headers=header)
         content_string = resp.content.decode("utf-8")
