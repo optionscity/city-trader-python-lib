@@ -6,12 +6,11 @@ import json
 import requests
 import base64
 from datetime import datetime, timedelta
-import urlparse
 
 class RequestClient():
     def __init__(self, server, client_id, client_secret, username, password):
         self.server = server
-        self.token_url = urlparse.urljoin(self.server, 'token')
+        self.token_url = "/".join((self.server, 'token'))
         self.client_id = client_id
         self.client_secret = client_secret
         self.authorization_header = {"Authorization": "Basic %s" % base64.b64encode(client_id + ":" + client_secret)}
@@ -100,7 +99,8 @@ class RequestClient():
             "Authorization": "Bearer %s" % self.access_token,
             "Content-Type": "application/json"
         }
-        request_url = urlparse.urljoin(self.server, url)
+
+        request_url = "/".join((self.server, url))
 
         if request_type.lower() == "get":
             request_function = requests.get
