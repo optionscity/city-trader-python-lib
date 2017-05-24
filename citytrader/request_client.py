@@ -62,7 +62,7 @@ class RequestClient():
             "grant_type": "refresh_token",
             "refresh_token": self.refresh_token
         }
-        resp = requests.post(self.token_url, data=payload, headers=self.authorization_header)
+        resp = requests.post(self.token_url, data=payload, auth=HTTPBasicAuth(self.client_id, self.client_secret))
         content_string = resp.content.decode("utf-8")
         if resp.status_code == 200:
             _resp = json.loads(content_string)
