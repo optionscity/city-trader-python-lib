@@ -4,7 +4,7 @@ The RequestClient gets and refreshes tokens and also allows for resource request
 
 import json
 import requests
-import base64
+from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta
 
 class RequestClient():
@@ -13,7 +13,6 @@ class RequestClient():
         self.token_url = "/".join((self.server, 'token'))
         self.client_id = client_id
         self.client_secret = client_secret
-        self.authorization_header = {"Authorization": "Basic %s" % base64.b64encode(client_id + ":" + client_secret)}
         self.access_token = None
         self.refresh_token = None
         self.expires_at = None
@@ -32,10 +31,10 @@ class RequestClient():
             "username": username,
             "password": password
         }
-        resp = requests.post(self.token_url, data=payload, headers=self.authorization_header)
-
+        resp = requests.post(self.token_url, data=payload, auth=HTTPBasicAuth(self.client_id, self.client_secret))
+        content_string = resp.content.decode("utf-8")
         if resp.status_code == 200:
-            _resp = json.loads(resp.content)
+            _resp = json.loads(content_string)
             _resp["status_code"] = 200
             _resp["reason"] = "OK"
             self.access_token = _resp['access_token']
@@ -47,11 +46,11 @@ class RequestClient():
             return _resp
         else:
             self.is_valid_session = False
-            self.is_valid_reason = json.loads(resp.content)
+            self.is_valid_reason = json.loads(content_string)
 
             return {
                 "status_code": resp.status_code,
-                "reason": json.loads(resp.content)
+                "reason": json.loads(content_string)
             }
 
     #
@@ -64,9 +63,9 @@ class RequestClient():
             "refresh_token": self.refresh_token
         }
         resp = requests.post(self.token_url, data=payload, headers=self.authorization_header)
-
+        content_string = resp.content.decode("utf-8")
         if resp.status_code == 200:
-            _resp = json.loads(resp.content)
+            _resp = json.loads(content_string)
             _resp["status_code"] = 200
             _resp["reason"] = "OK"
             self.access_token = _resp['access_token']
@@ -78,7 +77,7 @@ class RequestClient():
             return _resp
         else:
             self.is_valid_session = False
-            self.is_valid_reason = json.loads(resp.content)
+            self.is_valid_reason = json.loads(content_string)
 
             return {
                 "status_code": resp.status_code,
@@ -123,10 +122,10 @@ class RequestClient():
 
         else:
             resp = request_function(request_url, headers=header)
-
+        content_string = resp.content.decode("utf-8")
         if resp.status_code == 200:
             return {
-                "data": json.loads(resp.content),
+                "data": json.loads(content_string),
                 "status_code": 200,
                 "reason": resp.reason
             }
