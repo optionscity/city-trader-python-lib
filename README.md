@@ -2,7 +2,7 @@
 A python library for working with OptionsCity Software's City Trader REST API.
 
 #### Prerequisites
-1. [Python 2.7 or greater](https://www.python.org/downloads/release/python-2710/)
+1. [Python 2.7](https://www.python.org/downloads/release/python-2710/) - Untested with python 3.0+.
 2. [Python setuptools](https://pypi.python.org/pypi/setuptools)
 3. A City Trader Username and Password
 4. A City Trader API client_id and client_secret
