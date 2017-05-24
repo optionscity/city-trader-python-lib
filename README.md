@@ -17,7 +17,7 @@ A python library for working with OptionsCity Software's City Trader REST API.
 ##### Initialize client and retrieve new token
 ```python
 from citytrader.request_client import RequestClient
-rc = RequestClient(server="https://devservices.optionshop.com", client_id="<client_id>", client_secret="<client_secret>", username="<username>", password="<password>")
+rc = RequestClient(server="https://devapi.optionscity.com", client_id="<client_id>", client_secret="<client_secret>", username="<username>", password="<password>")
 ```
 
 ##### Retrieve all orders
