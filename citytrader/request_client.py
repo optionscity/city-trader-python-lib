@@ -5,7 +5,7 @@ The RequestClient gets and refreshes tokens and also allows for resource request
 import json
 import requests
 from requests.auth import HTTPBasicAuth
-from datetime import datetime, timedelta
+import time
 
 class RequestClient():
     def __init__(self, server, client_id, client_secret, username, password):
@@ -39,7 +39,7 @@ class RequestClient():
             _resp["reason"] = "OK"
             self.access_token = _resp['access_token']
             self.refresh_token = _resp['refresh_token']
-            self.expires_at = datetime.utcnow() + timedelta(seconds=_resp['expires_in'])
+            self.expires_at = time.time() + _resp['expires_in']
             self.is_valid_session = True
             self.is_valid_reason = "OK"
 
@@ -70,7 +70,7 @@ class RequestClient():
             _resp["reason"] = "OK"
             self.access_token = _resp['access_token']
             self.refresh_token = _resp['refresh_token']
-            self.expires_at = datetime.utcnow() + timedelta(seconds=_resp['expires_in'])
+            self.expires_at = time.time() + _resp['expires_in']
             self.is_valid_session = True
             self.is_valid_reason = "OK"
 
@@ -91,7 +91,7 @@ class RequestClient():
     def request(self, request_type, url="events", data=None, params={}):
 
         #   refresh token if necessary
-        if datetime.utcnow() >= self.expires_at:
+        if time.time() >= self.expires_at:
             self.token_refresh()
 
         header = {
@@ -137,3 +137,12 @@ class RequestClient():
                 "status_code": resp.status_code,
                 "reason": resp.reason
             }
+
+    def get(self, url, params={}):
+
+        header = {
+            "Authorization": "Bearer %s" % self.access_token,
+            "Content-Type": "application/json"
+        }
+
+        return requests.get("/".join((self.server, url)), headers=header, params=params)
