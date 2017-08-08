@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>CityTrader URI Redirect</title>
+    <script src='//code.jquery.com/jquery-3.2.1.min.js'></script>
+
+    <script>
+        $.ajax({
+            url: "http://localhost:8081" + window.location.hash.replace("#", "?"),
+            type: "GET",
+            success: function(data) {
+                // this only work with preauthenticated session
+                // TODO any workaround to close this tab?
+                window.close();
+            }
+        });
+
+  </script>
+</head>
+<body>
+Authentication complete.
+</body>
+</html>
