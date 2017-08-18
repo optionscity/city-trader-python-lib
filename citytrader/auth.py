@@ -16,6 +16,8 @@ def get_access_token(client_id, env="devapi"):
 
     # build required urls
     authorize_url = "https://%s.optionscity.com/oauth/authorize" % env
+    if env == "test":
+        authorize_url = "http://localhost:9000/oauth/authorize"
     callback_uri = "http://localhost:%s" % str(PORT)
     authorization_redirect_url = authorize_url + '?response_type=token&client_id=' + client_id + '&redirect_uri=' + callback_uri + '&scope=openid'
 
